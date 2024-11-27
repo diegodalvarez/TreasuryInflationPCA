@@ -6,6 +6,7 @@ Created on Mon Nov 18 07:31:23 2024
 """
 
 import os
+import numpy as np
 import pandas as pd
 
 from CollectData import DataManager
@@ -48,7 +49,7 @@ class InflationPCA(DataManager):
         file_path = os.path.join(self.pca_path, "PCASignal.parquet")
         try:
             
-            if verbose == True: print("Trying to find data")
+            if verbose == True: print("Trying to find PCA data")
             df_combined = pd.read_parquet(path = file_path, engine = "pyarrow")
             if verbose == True: print("Found Data\n")
             
@@ -85,5 +86,56 @@ class InflationPCA(DataManager):
             df_combined.to_parquet(path = file_path, engine = "pyarrow")
             
         return df_combined
+    
+    def get_log_pca(self, verbose: bool = False) -> pd.DataFrame: 
+        
+        file_path = os.path.join(self.pca_path, "LogPCASignal.parquet")
+        try:
+            
+            if verbose == True: print("Trying to find Log PCA data")
+            df_combined = pd.read_parquet(path = file_path, engine = "pyarrow")
+            if verbose == True: print("Found Data\n")
+            
+        except: 
+        
+            if verbose == True: print("Couldn't find data, collecting it")
+            df_inflation = (self.get_inflation_swap().drop(
+                columns = ["Description"]).
+                assign(
+                    security = lambda x: x.security.str.split(" ").str[0],
+                    value    = lambda x: np.log(x.value),
+                    curve    =  "inflation_swap"))
+            
+            df_breakeven = (self.get_breakeven().drop(
+                columns = ["Description"]).
+                assign(
+                    security = lambda x: x.security.str.split(" ").str[0],
+                    value    = lambda x: np.log(x.value),
+                    curve    = "tsy_breakeven"))
+            
+            df_combined = (pd.concat([
+                df_inflation, df_breakeven]).
+                groupby("curve").
+                apply(self._get_pca).
+                reset_index().
+                melt(id_vars = ["date", "curve"]).
+                pivot(index = ["date", "variable"], columns = "curve", values = "value").
+                dropna().
+                reset_index().
+                assign(spread = lambda x: x.inflation_swap - x.tsy_breakeven).
+                groupby("variable").
+                apply(self._lag_spread).
+                reset_index(drop = True))
+            
+            if verbose == True: print("Saving data\n")
+            df_combined.to_parquet(path = file_path, engine = "pyarrow")
+            
+        return df_combined
+    
+def main() -> None:
+    
+    InflationPCA().get_pca(verbose = True)
+    InflationPCA().get_log_pca(verbose = True)
 
-if __name__ == "__main__": InflationPCA().get_pca(verbose = True)
+if __name__ == "__main__": main()
+

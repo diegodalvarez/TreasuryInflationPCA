@@ -22,17 +22,24 @@ class DataManager:
         if os.path.exists(self.data_path) == False: os.makedirs(self.data_path)
         if os.path.exists(self.raw_data_path) == False: os.makedirs(self.raw_data_path)
         
-        self.bbg_xlsx_path = r"C:\Users\Diego\Desktop\app_prod\BBGData\root\BBGTickers.xlsx"
         self.bbg_data_path = r"C:\Users\Diego\Desktop\app_prod\BBGData\data"
-        self.df_tickers    = (pd.read_excel(
-            io = self.bbg_xlsx_path, sheet_name = "tickers"))
+        
+        self.bbg_xlsx_path = r"C:\Users\Diego\Desktop\app_prod\BBGData\root\BBGTickers.xlsx"
+        if os.path.exists(self.bbg_xlsx_path) == False: 
+            self.bbg_xlsx_path = r"/Users/diegoalvarez/Desktop/BBGData/root/BBGTickers.xlsx"
         
         self.bbg_fut_path   = r"C:\Users\Diego\Desktop\app_prod\BBGFuturesManager\root\fut_tickers.xlsx"
+        if os.path.exists(self.bbg_fut_path) == False: 
+            self.bbg_fut_path = r"/Users/diegoalvarez/Desktop/BBGFuturesManager/root/fut_tickers.xlsx"
+        
         self.bbg_front_path = r"C:\Users\Diego\Desktop\app_prod\BBGFuturesManager\data\PXFront"
         self.bbg_deliv_path = r"C:\Users\Diego\Desktop\app_prod\BBGFuturesManager\data\BondDeliverableRisk"
         
         self.df_fut_tickers = (pd.read_excel(
             io = self.bbg_fut_path, sheet_name = "px"))
+        
+        self.df_tickers    = (pd.read_excel(
+            io = self.bbg_xlsx_path, sheet_name = "tickers"))
         
         self.bad_breakevens = [
             "USGGBE01 Index", "USGGBE09 Index", "USGGBE06 Index", 
@@ -146,7 +153,7 @@ class DataManager:
             
         except: 
             
-            if verbose == True: print("Couldn't find it, collecting")
+            if verbose == True: print("Couldn't find it, collecting") 
             raw_tickers = (self.df_fut_tickers.assign(
                 second = lambda x: x.name.str.split(" ").str[-2]).
                 query("second == 'Treasury'").
@@ -191,4 +198,4 @@ def main() -> None:
     DataManager().get_breakeven(verbose = True)
     DataManager().get_tsy_fut(verbose = True)
     
-if __name__ == "__main__": main()
+#if __name__ == "__main__": main()
