@@ -198,4 +198,4 @@ def main() -> None:
     DataManager().get_breakeven(verbose = True)
     DataManager().get_tsy_fut(verbose = True)
     
-#if __name__ == "__main__": main()
+if __name__ == "__main__": main()

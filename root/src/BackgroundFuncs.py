@@ -90,8 +90,7 @@ class BackgroundHelperFuncs(InflationPCA):
     
         df_backtest = (InflationPCA().get_log_pca().merge(
             right = InflationPCA().get_tsy_fut(), how = "inner", on = ["date"]).
-            assign(signal_bps = lambda x: -1 * np.sign(x.lag_spread) * x.PX_bps).
-            assign(signal_bps = lambda x: np.where(x.variable == "PC3", -1 * x.signal_bps, x.signal_bps)))
+            assign(signal_bps = lambda x: np.sign(x.lag_spread) * x.PX_bps))
         
         return df_backtest
 

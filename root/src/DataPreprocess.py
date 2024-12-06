@@ -138,4 +138,3 @@ def main() -> None:
     InflationPCA().get_log_pca(verbose = True)
 
 if __name__ == "__main__": main()
-
