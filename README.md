@@ -10,3 +10,6 @@ Trading Treasuries Based on Mean Reversion of PCA Components across Inflation Te
 ![image](https://github.com/user-attachments/assets/134306bc-c59a-4bb5-9425-bb0e31af5fc9)
 ![image](https://github.com/user-attachments/assets/ef015548-4d9d-48e7-a26a-3fd26545a702)
 
+# Todo
+1. test out EWMA and EWMAC spread trend
+2. test our z-score signal
