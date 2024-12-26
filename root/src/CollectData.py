@@ -12,9 +12,11 @@ class DataManager:
     
     def __init__(self) -> None:
         
-        self.root_path      = os.path.abspath(
-            os.path.join((os.path.abspath(
-                os.path.join(os.getcwd(), os.pardir))), os.pardir))
+        
+        self.dir       = os.path.dirname(os.path.abspath(__file__))  
+        self.root_path = os.path.abspath(
+            os.path.join(os.path.abspath(
+                os.path.join(self.dir, os.pardir)), os.pardir))
         
         self.data_path      = os.path.join(self.root_path, "data")
         self.raw_data_path  = os.path.join(self.data_path, "RawData")

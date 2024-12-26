@@ -77,7 +77,7 @@ class InflationPCA(DataManager):
                 pivot(index = ["date", "variable"], columns = "curve", values = "value").
                 dropna().
                 reset_index().
-                assign(spread = lambda x: x.inflation_swap - x.tsy_breakeven).
+                assign(spread = lambda x: x.tsy_breakeven - x.inflation_swap).
                 groupby("variable").
                 apply(self._lag_spread).
                 reset_index(drop = True))
@@ -122,7 +122,8 @@ class InflationPCA(DataManager):
                 pivot(index = ["date", "variable"], columns = "curve", values = "value").
                 dropna().
                 reset_index().
-                assign(spread = lambda x: x.inflation_swap - x.tsy_breakeven).
+                assign(spread = lambda x: x.tsy_breakeven - x.inflation_swap).
+                assign(spread = lambda x: np.where(x.variable == "PC3", -x.spread, x.spread)).
                 groupby("variable").
                 apply(self._lag_spread).
                 reset_index(drop = True))
