@@ -29,5 +29,6 @@ A formal writeup of the strategy (rough draft) in this notebook called ```Treasu
 
 # Todo
 
-1. Rolling regression comparison
+1. In rolling regression need positive & negative beta sharpe pyaoff
+2. Then need do an expanding lookback window to compare the results of the beta 
 
