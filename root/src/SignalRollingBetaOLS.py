@@ -101,5 +101,44 @@ class RollingBetaOLS(InflationPCA):
             
             if verbose == True: print("Saving Data\n")
             df_out.to_parquet(path = file_path, engine = "pyarrow")
+            
+        return df_out
+    
+    def _get_rolling_ols(self, df: pd.DataFrame) -> pd.DataFrame: 
         
-RollingBetaOLS().get_proportion(verbose = True)
+        df_out = (pd.concat([
+            self._rolling_ols(df, self.windows[window]).assign(period = window, window = self.windows[window])
+            for window in self.windows.keys()]))
+        
+        return df_out
+    
+    def get_window(self, verbose: bool = False) -> pd.DataFrame:
+        
+        file_path = os.path.join(self.beta_bootstrap_path, "RollingWindowBetaBootstrap.parquet")
+        try:
+        
+            if verbose == True: print("Trying to find Rolling Window OLS Beta")
+            df_out = pd.read_parquet(path = file_path, engine = "pyarrow")
+            if verbose == True: print("Found Data\n")
+            
+        except: 
+            
+            if verbose == True: print("Couldn't find data, getting it now")
+        
+            df_out = (self.prep_data().groupby(
+                "group_var").
+                apply(self._get_rolling_ols).
+                drop(columns = ["group_var"]).
+                reset_index())
+            
+            if verbose == True: print("Saving data\n")
+            df_out.to_parquet(path = file_path, engine = "pyarrow")
+            
+        return df_out
+        
+def main() -> None:
+    
+    df = RollingBetaOLS().get_window(verbose = True)
+    df = RollingBetaOLS().get_proportion(verbose = True)
+    
+if __name__ == "__main__": main()
