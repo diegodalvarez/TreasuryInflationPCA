@@ -25,7 +25,9 @@ Below is a plot of Treasury futures conditioned on the raw signal
 
 <img width="1328" alt="image" src="https://github.com/user-attachments/assets/8d1a340d-f8a5-4aeb-bbe3-0457bfb4efe3" />
 
-A formal writeup of the strategy (rough draft) in this notebook called ```Treasury_Inflation_PCA_Technical_Writeup.pdf```
+|         | PDF          |
+|----------------|---------------------|
+| Technical Writeup containing methodology & results | <a href="https://github.com/diegodalvarez/TreasuryInflationPCA/blob/main/Treasury_Inflation_PCA_Technical_Writeup.pdf"><img src="https://github.com/user-attachments/assets/2a9348c6-92aa-41e1-baa5-0669429bdd2c" alt="image" width="500"/></a> |
 
 # Todo
 
